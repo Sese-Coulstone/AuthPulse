@@ -1,0 +1,55 @@
+spring:
+  application:
+        name: AuthPulse
+
+  datasource:
+        url: ${DB_URL}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+
+  jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: true
+      database: mysql
+      database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: false
+          from: ${MAIL_FROM}
+    protocol: smtp
+
+  ratelimiter:
+    instances:
+      loginLimiter:
+        limit: 5
+        refresh-period: 1m
+      resetPasswordOtpLimiter:
+        limit: 5
+        refresh-period: 1m
+
+app:
+  cors:
+    allowed-origins: http://localhost:5173
+    allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+    allowed-headers: Authorization,Content-Type,Accept,Origin,X-Requested-With,Access-Control-Request-Method,Access-Control-Request-Headers
+    exposed-headers: Authorization,Access-Control-Allow-Origin,Access-Control-Allow-Credentials
+    max-age: 3600
+
+server:
+  servlet:
+    context-path: /api/v1.0
