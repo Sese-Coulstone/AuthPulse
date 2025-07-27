@@ -30,8 +30,6 @@ spring:
             enable: true
           ssl:
             enable: false
-          from: ${MAIL_FROM}
-    protocol: smtp
 
   ratelimiter:
     instances:
@@ -44,10 +42,10 @@ spring:
 
 app:
   cors:
-    allowed-origins: http://localhost:5173
-    allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
-    allowed-headers: Authorization,Content-Type,Accept,Origin,X-Requested-With,Access-Control-Request-Method,Access-Control-Request-Headers
-    exposed-headers: Authorization,Access-Control-Allow-Origin,Access-Control-Allow-Credentials
+    allowed-origins: http://localhost:3000
+    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+    allowed-headers: Authorization,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+    exposed-headers: Access-Control-Allow-Origin,Access-Control-Allow-Credentials
     max-age: 3600
 
 server:

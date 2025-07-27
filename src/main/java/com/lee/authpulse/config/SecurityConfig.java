@@ -38,12 +38,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/reset-password", "/verify-email", "/verify-otp", "/reset-password-otp")
-                        .anonymous() // Only allow unauthenticated users
-                        .anyRequest().authenticated())
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -55,20 +56,15 @@ public class SecurityConfig {
         return http.build();
     }
 
-
     @Bean
-    public CorsFilter corsFilter() {
-        return new CorsFilter(corsConfigurationSource());
-    }
-
-    private CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
-        config.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
-        config.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
-        config.setExposedHeaders(Arrays.asList(corsProperties.getExposedHeaders().split(",")));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));  // Add your frontend URL
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+        config.setExposedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
         config.setAllowCredentials(true);
-        config.setMaxAge(corsProperties.getMaxAge());
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
